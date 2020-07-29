@@ -1,0 +1,122 @@
+#include <iostream>
+using namespace std;
+
+struct Node{
+	int data;
+	Node *next;
+};
+
+//to check whether the stack is empty
+bool isEmpty(Node *tmpTop){
+	return (tmpTop == NULL);
+}
+
+//display all values inside the stack
+void displayStack(Node *cur){
+	if(isEmpty(cur))
+		cout << "Stack is empty! Nothing to display.\n";
+	else{
+		while(cur){
+			cout << cur->data << " ";
+			cur = cur->next;
+		}
+	}
+	cout << endl;
+}
+
+//adding a new element into the stack
+void push(Node **tmpTop, int n){
+    Node *newNode = new Node;
+    newNode->data = n;
+    newNode->next = *tmpTop;
+    *tmpTop = newNode;
+}
+
+//extract data from the top layer of the stack 
+int pop(Node **tmpTop){
+	int data = -1;
+
+	if(isEmpty(*tmpTop))
+		cout << "Stack is empty! Nothing to pop.\n";
+	else{
+		Node *oldTop = *tmpTop;
+		*tmpTop = oldTop->next;
+		data = oldTop->data;
+		delete(oldTop);
+	}
+	return data;
+}
+
+//to insert the first data to the node
+void initNode(Node *tmpHead, int n){
+	tmpHead->data = n;
+	tmpHead->next = NULL;
+}
+
+//to add data at the end of the node
+void addNode(Node *tmpHead, int n){
+	Node *newNode = new Node;
+	newNode->data = n;
+	newNode->next = NULL;
+
+	while(tmpHead->next){
+		tmpHead = tmpHead->next;
+	}
+    
+	tmpHead->next = newNode;
+}
+
+//a function to check a list of data is palindrome or not 
+bool isPalindrome(Node **tmpTop, Node *tmpHead){
+	bool pal = true;
+
+	//check if the node first data is equal to stack last data (top layer)
+	while(tmpHead != NULL){
+		if(tmpHead->data != pop(tmpTop)){
+			pal = false;
+			break;
+		}
+		tmpHead = tmpHead->next;
+	}
+	return pal;
+}
+
+int main(){
+	//a real structure can start with empty(NULL)
+	Node *top = NULL;
+	//create another node that stores the same value as the stack
+	Node *head = new Node;
+	int list;
+
+	cout << "Enter a list of numbers with spacing, and end your list with -1 >> ";
+
+	//let user input unlimited times, until they put -1(termination case)
+	while(cin >> list){
+		if(list == -1)
+			break;
+		else{
+			if(top == NULL){
+				initNode(head, list);
+				push(&top, list);
+			}
+			else{
+				push(&top, list);
+				addNode(head, list);
+			}
+		}
+	}
+
+	//display the list of numbers from top layer of the stack
+	cout << "List: TOP ";
+	displayStack(top);
+
+	if(isPalindrome(&top, head)){
+		cout << "The list is a Palindrome.\n";
+    }
+	else{
+		cout << "The list is not a Palindrome.\n";
+    }
+
+	return 0;
+
+}
