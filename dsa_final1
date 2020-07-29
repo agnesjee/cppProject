@@ -1,0 +1,124 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+struct Node{
+    int data;
+    Node *next;
+};
+
+bool isEmpty(Node *tmpTop){
+    return (tmpTop == NULL);
+}
+
+void displayStack(Node *cur){
+    if(isEmpty(cur))
+        cout << "Stack is empty! Nothing to display.\n";
+    else{
+        while(cur){
+            cout << cur->data << " ";
+            cur = cur->next;
+        }
+    }
+    cout << endl;
+}
+
+void push(Node **tmpTop, int n){
+    Node *newNode = new Node;
+    newNode->data = n;
+    newNode->next = *tmpTop;
+    *tmpTop = newNode;
+}
+
+
+int pop(Node **tmpTop){
+    int data = -1;
+
+    if(isEmpty(*tmpTop))
+        cout << "Stack is empty! Nothing to pop.\n";
+    else{
+        Node *oldTop = *tmpTop;
+        *tmpTop = oldTop->next;
+        data = oldTop->data;
+        delete(oldTop);
+    }
+    return data;
+}
+
+/*
+bool testing(Node *cur){
+    bool pal = true;
+    int count = 0;
+    int array[count];
+
+    while(cur){
+        count++;
+        cur = cur->next;
+    }
+    
+    for(int i = 0; i < count; i++){
+        array[i] = pop(&cur);
+    }
+
+    int k = 0;
+    while(array[k] != 0){
+        if(pop(&cur) != array[k])
+            pal = false;
+        k++;
+    }
+    return pal;
+}
+*/
+
+
+bool isPalindrome(Node *ptrStack){
+    Node *cur = ptrStack;
+    stack <int> s;
+
+    while(cur != NULL){
+        s.push(cur->data); 
+        cur = cur->next;
+    }
+
+    while(ptrStack != NULL){
+        int i = s.top();
+        s.pop();
+
+        if(ptrStack->data != i)
+            return false;
+
+        ptrStack = ptrStack->next;
+    }
+    return true;
+}
+
+
+int main(){
+    Node *top = NULL;
+    int list;
+
+    cout << "Enter a list of numbers with spacing, and end your list with -1 >> ";
+    
+    while(cin >> list){
+        
+        if(list == -1)
+        break;
+        
+        push(&top,list);
+
+    }
+    
+    cout << "List: TOP ";
+    displayStack(top);
+    
+    if(isPalindrome(top)){
+        cout << "The list is a Palindrome.\n";
+    }
+    else{
+        cout << "The list is not a Palindrome.\n";
+    }
+    
+
+    return 0;
+    
+}
